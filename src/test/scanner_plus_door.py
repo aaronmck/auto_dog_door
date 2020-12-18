@@ -26,6 +26,9 @@ current_position = 0
 open_pos = 50
 closed_pos = 460
 jumps = 20
+rssi_threshold = -50
+rssi_buffer_size = 4
+scan_spacing_in_secs = 1.0
 
 class MotorDoor:
     def __init__(self,swing_range=110):
@@ -40,17 +43,13 @@ class MotorDoor:
         
     def slow_open(self):
         if not self.is_open:
-            for i in range(self.rotation_position,self.open_position,-1 * self.jump_dist):
-                self.move_to(i)
-                time.sleep(0.2)
+            self.move_to(self.open_position)
             self.rotation_position = self.open_position
         self.is_open = True
         
     def slow_close(self):
         if self.is_open:
-            for i in range(self.rotation_position,self.closed_position,self.jump_dist):
-                self.move_to(i)
-                time.sleep(0.2)
+            self.move_to(self.closed_position)
             self.rotation_position = self.closed_position
         self.is_open = False
         
@@ -64,10 +63,10 @@ door = MotorDoor()
         
 scanner = Scanner()
 
-scan_buffer = [-100 for i in range(4)]
+scan_buffer = [-100 for i in range(rssi_buffer_size)]
 
 for i in range(0,100):
-    devices = scanner.scan(1.0)
+    devices = scanner.scan(scan_spacing_in_secs)
     
     for device in devices:
         if device.addr == 'd5:dd:6b:2b:66:c1':
@@ -75,7 +74,7 @@ for i in range(0,100):
             scan_buffer = scan_buffer[1:len(scan_buffer)]
             scan_buffer.append(device.rssi)
             avg = float(sum(scan_buffer))/float(len(scan_buffer))
-            if avg < -45:
+            if avg < rssi_threshold:
                 print("FAR")
                 door.slow_close()
             else:
