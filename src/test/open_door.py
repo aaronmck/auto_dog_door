@@ -29,8 +29,6 @@ rssi_buffer_size = 2
 scan_spacing_in_secs = 1
 seconds_door_stays_open = 30
 
-logfile=open("Logfile.txt","w")
-
 logging.basicConfig(
     format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
     level=logging.INFO,
@@ -89,26 +87,4 @@ class MotorDoor:
         bus.write_word_data(addr, 0x08, move_to_position) # channel stop time is a special position val calculated above
 
 door = MotorDoor()
-
-        
-scanner = Scanner()
-
-scan_buffer = [-100 for i in range(rssi_buffer_size)]
-
-while True:
-    devices = scanner.scan(scan_spacing_in_secs)
-    
-    for device in devices:
-        if device.addr == 'd5:dd:6b:2b:66:c1':
-            scan_buffer = scan_buffer[1:len(scan_buffer)]
-            scan_buffer.append(device.rssi)
-            avg = float(sum(scan_buffer))/float(len(scan_buffer))
-            logging.info("DEV = {}  RSSI = {}  Average = {}  DOOR_OPEN = {}".format(device.addr, device.rssi,avg,door.is_open))
-            logfile.write("DEV = {}  RSSI = {}  Average = {}  DOOR_OPEN = {}".format(device.addr, device.rssi,avg,door.is_open))
-            
-            if avg < rssi_threshold:
-                door.slow_close()
-            else:
-                door.slow_open()
-
- 
+door.slow_open()
