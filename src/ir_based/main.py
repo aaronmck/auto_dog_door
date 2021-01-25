@@ -61,11 +61,11 @@ class DoorState:
         
         if self.door_state == Door.INIT_OPEN:
             assert(self.door_position_open)
-            if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
+            if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 pass # we're already in the opening stage
-            elif self.dist1 < self.min_open_secs:
+            elif self.dist1 < self.min_open_dist:
                 pass # we're already in the opening stage
-            elif self.dist2 < self.min_open_secs:
+            elif self.dist2 < self.min_open_dist:
                 self.door_state = Door.PASS_THROUGH_OPEN # they've passed through (door1 > min)
             else: # neither
                 # this one is tricky; either it's a false alarm or they've passed through too quickly; we'll say false alarm
@@ -74,51 +74,51 @@ class DoorState:
                 
         elif self.door_state == Door.PASS_THROUGH_OPEN:
             assert(self.door_position_open)
-            if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
+            if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 # this is confusing; we'll go back to the open state
                 self.door_state = INIT_OPEN
-            elif self.dist1 < self.min_open_secs:
+            elif self.dist1 < self.min_open_dist:
                self.door_state = INIT_OPEN # also confusing, we'll go to open
-            elif self.dist2 < self.min_open_secs:
+            elif self.dist2 < self.min_open_dist:
                 # stay in this state; maybe we missed the dist2 close in the last cycle
                 pass
             else: # neither
                 self.door_state = Door.HOLD_OPEN
                 
         elif self.door_state == Door.HOLD_OPEN:
-            if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
+            if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 # a little weird, are they coming back in? lets assume so
                 self.door_state = Door.PASS_THROUGH_CLOSE
-            elif self.dist1 < self.min_open_secs:
+            elif self.dist1 < self.min_open_dist:
                 # false alarm? that's the bet
                 pass
-            elif self.dist2 < self.min_open_secs:
+            elif self.dist2 < self.min_open_dist:
                 self.door_state = Door.PASS_THROUGH_CLOSE
                 pass
             else: # neither
                 # stay here -- we're just open
                 pass
         elif self.door_state == Door.PASS_THROUGH_CLOSE:
-            if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
+            if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 # stay here until they're clear
                 pass
-            elif self.dist1 < self.min_open_secs:
+            elif self.dist1 < self.min_open_dist:
                 # again stay until they've passed
                 pass
-            elif self.dist2 < self.min_open_secs:
+            elif self.dist2 < self.min_open_dist:
                 pass
             else: # neither
                 self.door_state = Door.CLOSED
                 door.slow_close(self.min_open_secs)
                 
         elif self.door_state == Door.CLOSED:
-            if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
+            if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 self.door_state = Door.INIT_OPEN
                 door.slow_open()
-            elif self.dist1 < self.min_open_secs:
+            elif self.dist1 < self.min_open_dist:
                 self.door_state = Door.INIT_OPEN
                 door.slow_open()
-            elif self.dist2 < self.min_open_secs:
+            elif self.dist2 < self.min_open_dist:
                 # assume we trapped someone outside
                 self.door_state = Door.INIT_OPEN
                 door.slow_open()
