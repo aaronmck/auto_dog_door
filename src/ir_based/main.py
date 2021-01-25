@@ -8,10 +8,8 @@ addr = 0x08 # bus address
 bus = SMBus(1) # indicates /dev/ic2-1
 
 
-parser = argparse.ArgumentParser(description='Process some integers.')
+parser = argparse.ArgumentParser(description='Automate the dog door')
 parser.add_argument('--logfile', help='the log file to write to',required=True)
-parser.add_argument('--device', help='the bluetooth MAC address to watch',required=True)
-parser.add_argument('--threshold', help='the rssi threshold to open the door',required=True)
 
 args = parser.parse_args()
 
@@ -59,6 +57,8 @@ class DoorState:
 
 
     def decide(self):
+        pre_state = self.door_state
+        
         if self.door_state == Door.INIT_OPEN:
             assert(self.door_position_open)
             if self.dist1 < self.min_open_secs and self.dist2 < self.min_open_secs:
@@ -125,9 +125,8 @@ class DoorState:
             else: # neither
                 # keep it closed
                 door.slow_close(self.min_open_secs)
-            
+        logging.info("Dist1 = {} Dist2 = {} PrevState = {} State = {}".format(self.dist1,self.dist2,prev_state,self.door_state))
         
-print ("Enter 1 for ON or 0 for OFF")
 doorstate = DoorState(door,bus)
 while True:
     doorstate.read_distances()
