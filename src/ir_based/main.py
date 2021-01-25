@@ -39,7 +39,7 @@ class Door(Enum):
     CLOSED = 6
 
 class DoorState:
-    def __init__(self,door,bus,start_open=False,min_open_dist=90,min_open_secs=30, ):
+    def __init__(self,door,bus,start_open=False,min_open_dist=90,min_open_secs=30):
         self.door = door
         self.door_state = if start_open Door.HOLD_OPEN else Door.CLOSED
         self.door_position_open = start_open
@@ -127,13 +127,8 @@ class DoorState:
             
         
 print ("Enter 1 for ON or 0 for OFF")
+doorstate = DoorState(door,bus)
 while True:
-        block = bus.read_i2c_block_data(addr, 0, 4)
-        dist1 = block[0]<<8 | block[1]
-        dist2 = block[2]<<8 | block[3]
-
-        print(block)
-        print(dist1)
-        print(dist2)
-        print("---")
-        time.sleep(1)
+    doorstate.read_distances()
+    doorstate.decide()
+    time.sleep(0.2)
