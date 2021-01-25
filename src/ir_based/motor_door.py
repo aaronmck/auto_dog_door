@@ -67,3 +67,4 @@ if __name__ == "__main__":
             
     door = MotorDoor()
     door.slow_open()
+    

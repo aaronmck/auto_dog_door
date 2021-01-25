@@ -88,9 +88,9 @@ class DoorState:
 
             if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 # this is confusing; we'll go back to the open state
-                self.door_state = INIT_OPEN
+                self.door_state = Door.INIT_OPEN
             elif self.dist1 < self.min_open_dist:
-               self.door_state = INIT_OPEN # also confusing, we'll go to open
+               self.door_state = Door.INIT_OPEN # also confusing, we'll go to open
             elif self.dist2 < self.min_open_dist:
                 # stay in this state; maybe we missed the dist2 close in the last cycle
                 pass
