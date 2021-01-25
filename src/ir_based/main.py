@@ -38,7 +38,7 @@ class Door(Enum):
 class DoorState:
     def __init__(self,door,bus,start_open=False,min_open_dist=90,min_open_secs=30):
         self.door = door
-        self.door_state = Door.Closed
+        self.door_state = Door.CLOSED
         if start_open == Door.HOLD_OPEN:
             self.door_state = Door.CLOSED
         self.door_position_open = start_open
