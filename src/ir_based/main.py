@@ -52,10 +52,21 @@ class DoorState:
             door.slow_close(self.min_open_secs)
 
     def read_distances(self):
-        block = self.bus.read_i2c_block_data(addr, 0, 4)
-        self.dist1 = block[0]<<8 | block[1]
-        self.dist2 = block[2]<<8 | block[3]
-
+        unread = True
+        read_count = 0
+        while unread:
+            try:
+                block = self.bus.read_i2c_block_data(addr, 0, 4)
+                self.dist1 = block[0]<<8 | block[1]
+                self.dist2 = block[2]<<8 | block[3]
+                unread = False
+            except OSError as e:
+                read_count += 1
+                time.sleep(0.1)
+                if read_count > 5:
+                    raise NameError("Unable to get distance measurements")
+                
+            
 
     def decide(self):
         pre_state = self.door_state
