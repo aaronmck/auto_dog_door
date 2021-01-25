@@ -23,6 +23,7 @@ logging.basicConfig(filename=args.logfile,
     format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
+logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.info("""Dog door monitor v1""")
 
