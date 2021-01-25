@@ -1,4 +1,3 @@
-from scanner import *
 from motor_door import *
 import argparse
 
