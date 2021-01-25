@@ -61,6 +61,7 @@ class DoorState:
                 self.dist2 = block[2]<<8 | block[3]
                 unread = False
             except OSError as e:
+                logging.info("READ FAILURE COUNT = {}".format(read_count))
                 read_count += 1
                 time.sleep(0.1)
                 if read_count > 5:
