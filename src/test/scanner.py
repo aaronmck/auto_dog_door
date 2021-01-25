@@ -15,13 +15,13 @@ class BluetoothScanner:
         devices = self.scanner.scan(self.scan_freq)
     
         for device in devices:
-            if device.addr in self.targets or len(self.targets) == 0:
+            if device.addr.upper() in self.targets or len(self.targets) == 0:
                 self.logger.debug("Hit on target {}, launching callback".format(device.addr))
                 callback_with_device(device)
 
     def add_target(self,target):
-        logger.info("Adding target {}".format(target))
-        self.targets.append(target)
+        self.logger.info("Adding target {}".format(target))
+        self.targets.append(target.upper())
 
 
         

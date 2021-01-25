@@ -10,16 +10,13 @@ class MotorDoor:
         self.open_position = open_position
         self.closed_position = closed_position
         self.jump_dist = jump_dist
-        self.swing_range = swing_range
 
         self.bus = smbus.SMBus(bus)
         self.addr = addr
 
         self.rotation_position = self.closed_position
-        self.move_to(self.closed_position)
         self.opened_time = datetime.datetime.now().timestamp() - 10000 # something a longish time ago... we really don't know
-        self.is_open = False
-
+        self.is_open = True
 
         ## Setup the motor
         time.sleep(1)
@@ -31,6 +28,7 @@ class MotorDoor:
         self.bus.write_byte_data(addr, motor_slot, 0x20) # enables word writes
         time.sleep(.25)
 
+        self.slow_close(0)
         
     def slow_open(self):
         if not self.is_open:
@@ -56,14 +54,16 @@ class MotorDoor:
                 self.rotation_position = self.closed_position
                 self.is_open = False
             else:
-                self.logger.info("Door not closed due to timeout")
+                self.logger.debug("Door not closed due to timeout")
         else:
             self.move_to(self.closed_position) # keep forcing open
         
     def move_to(self,move_to_position):
         #write start and stop to channel
-        bus.write_word_data(addr, 0x06, 0) 
-        bus.write_word_data(addr, 0x08, move_to_position)
+        self.bus.write_word_data(self.addr, 0x06, 0) 
+        self.bus.write_word_data(self.addr, 0x08, move_to_position)
 
-door = MotorDoor()
-door.slow_open()
+if __name__ == "__main__":
+            
+    door = MotorDoor()
+    door.slow_open()
