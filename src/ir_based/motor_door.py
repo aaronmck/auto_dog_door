@@ -35,7 +35,7 @@ class MotorDoor:
             self.logger.info("Opening door")
             for i in range(self.closed_position,self.open_position,-1 * self.jump_dist):
                 self.move_to(i)
-                time.sleep(0.1)
+                time.sleep(0.03)
             self.rotation_position = self.open_position
             self.opened_time = datetime.datetime.now().timestamp()
         else:

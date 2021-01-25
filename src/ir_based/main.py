@@ -126,9 +126,13 @@ class DoorState:
                 door.slow_close(self.min_open_secs)
         logging.info("Dist1 = {} Dist2 = {} PreState = {} State = {}".format(self.dist1,self.dist2,pre_state,self.door_state))
 
+        
 door = MotorDoor()
 doorstate = DoorState(door,bus)
-while True:
-    doorstate.read_distances()
-    doorstate.decide()
-    time.sleep(0.2)
+try:
+    while True:
+        doorstate.read_distances()
+        doorstate.decide()
+        time.sleep(0.2)
+finally:
+    door.slow_open()
