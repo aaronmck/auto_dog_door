@@ -125,7 +125,7 @@ class DoorState:
             else: # neither
                 # keep it closed
                 door.slow_close(self.min_open_secs)
-        logging.info("Dist1 = {} Dist2 = {} PrevState = {} State = {}".format(self.dist1,self.dist2,prev_state,self.door_state))
+        logging.info("Dist1 = {} Dist2 = {} PreState = {} State = {}".format(self.dist1,self.dist2,pre_state,self.door_state))
 
 door = MotorDoor()
 doorstate = DoorState(door,bus)
