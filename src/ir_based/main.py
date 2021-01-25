@@ -17,9 +17,9 @@ def unix_time_millis(dt):
     return (dt - epoch).total_seconds() * 1000.0
 
 
-logfile=open(args.logfile,"w")
+#logfile=open(args.logfile,"w")
 
-logging.basicConfig(
+logging.basicConfig(filename=args.logfile,
     format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
@@ -135,4 +135,5 @@ try:
         doorstate.decide()
         time.sleep(0.2)
 finally:
+    door.slow_open()
     door.slow_open()
