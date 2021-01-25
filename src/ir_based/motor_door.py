@@ -5,7 +5,7 @@ import logging
 
 class MotorDoor:
     """A class than handles interactions with a servo motor driving the dog door"""
-    def __init__(self,bus=1, motor_slot=0,addr=0x40, open_position=300,closed_position=480,jump_dist=5):
+    def __init__(self,bus=1, motor_slot=0,addr=0x40, open_position=300,closed_position=500,jump_dist=5):
         self.logger = logging.getLogger(__name__)
         self.open_position = open_position
         self.closed_position = closed_position
@@ -26,7 +26,7 @@ class MotorDoor:
         time.sleep(.25) # delay for reset
         self.bus.write_byte_data(addr, 0xfe, 0x79) #changes the Prescale register value for 50 Hz, using the equation in the datasheet.
         self.bus.write_byte_data(addr, motor_slot, 0x20) # enables word writes
-        time.sleep(.25)
+        time.sleep(.5)
 
         self.slow_close(0)
         
