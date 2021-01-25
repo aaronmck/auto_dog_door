@@ -41,7 +41,6 @@ class DoorState:
         self.door_state = Door.CLOSED
         if start_open == Door.HOLD_OPEN:
             self.door_state = Door.CLOSED
-        self.door_position_open = start_open
         self.min_open_secs = min_open_secs
         self.min_open_dist = min_open_dist # sensor distance, in mm
         self.bus = bus
@@ -61,7 +60,6 @@ class DoorState:
         pre_state = self.door_state
         
         if self.door_state == Door.INIT_OPEN:
-            assert(self.door_position_open)
             if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 pass # we're already in the opening stage
             elif self.dist1 < self.min_open_dist:
@@ -74,7 +72,7 @@ class DoorState:
                 door.slow_close(self.min_open_secs)
                 
         elif self.door_state == Door.PASS_THROUGH_OPEN:
-            assert(self.door_position_open)
+
             if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
                 # this is confusing; we'll go back to the open state
                 self.door_state = INIT_OPEN
