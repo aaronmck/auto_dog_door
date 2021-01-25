@@ -43,6 +43,7 @@ class DoorState:
             self.door_state = Door.CLOSED
         self.door_position_open = start_open
         self.min_open_secs = min_open_secs
+        self.min_open_dist = min_open_dist # sensor distance, in mm
         self.bus = bus
         
         if start_open:
