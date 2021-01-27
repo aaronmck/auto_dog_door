@@ -46,6 +46,8 @@ class DoorState:
         self.min_open_dist = min_open_dist # sensor distance, in mm
         self.bus = bus
         
+        self.hold_state_count = 0 # we use this to hold in a set state for a number of cycles
+        
         if start_open:
             door.slow_open()
         else:
@@ -71,6 +73,9 @@ class DoorState:
 
     def decide(self):
         pre_state = self.door_state
+        if self.hold_state_count > 0:
+            self.hold_state_count -= 1
+            
         
         if self.door_state == Door.INIT_OPEN:
             if self.dist1 < self.min_open_dist and self.dist2 < self.min_open_dist:
@@ -137,7 +142,9 @@ class DoorState:
             else: # neither
                 # keep it closed
                 door.slow_close(self.min_open_secs)
-        logging.info("Dist1 = {} Dist2 = {} PreState = {} State = {}".format(self.dist1,self.dist2,pre_state,self.door_state))
+
+        if pre_state != self.door_state:
+            logging.info("Dist1 = {} Dist2 = {} PreState = {} State = {}".format(self.dist1,self.dist2,pre_state,self.door_state))
 
         
 door = MotorDoor()
